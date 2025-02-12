@@ -1,0 +1,606 @@
+local Text = "Prison Realm: Open"
+
+-- don't change anything here unless you know
+local v22808 = require(game.ReplicatedStorage.Resources.UFW.TekrinnDialogue)
+local v22811 = {
+    {
+        Text = Text,
+        Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 17, 17)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
+            }),
+        TextStrokeColor = Color3.new(0, 0, 0),
+        Bold = false,
+        Italic = false,
+        Shake = {
+            Enabled = false,
+            Intensity = 1,
+            Lifetime = 2
+        },
+        TypeSpeed = 0.06
+    }
+}
+v22808.Speak(game.Players.LocalPlayer.Character, v22811)
+
+
+
+spawn(function()
+
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+-- Clone and parent the CamRig to the player character
+local camRig = ReplicatedStorage.Emotes.VFX.Assets.CamRig:Clone()
+camRig.Parent = character
+
+-- Wait for the CameraPart inside CamRig and the HumanoidRootPart of the player
+local cameraPart = camRig:WaitForChild("CameraPart") -- This is the part inside the CamRig
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+-- Create a weld to attach the CamRig to the HumanoidRootPart
+local weld = Instance.new("Weld")
+weld.Part0 = humanoidRootPart
+weld.Part1 = camRig:WaitForChild("HumanoidRootPart") -- Assuming this part exists inside the CamRig
+weld.C0 = CFrame.new(0, 0, 0) -- Maintain position relative to HumanoidRootPart
+weld.Parent = humanoidRootPart
+
+-- Play the animation if AnimationController exists
+local animationController = camRig:FindFirstChild("AnimationController")
+if animationController then
+    local animator = animationController:FindFirstChild("Animator")
+    if animator then
+        local animation = Instance.new("Animation")
+        animation.AnimationId = "rbxassetid://137845184446346"
+        local animationTrack = animator:LoadAnimation(animation)
+        animationTrack:Play()
+
+        -- When the animation ends, destroy the CamRig and create a new camera
+        animationTrack.Stopped:Connect(function()
+            -- Destroy the CamRig after the animation ends
+            camRig:Destroy()
+
+            -- Create a new camera for the player
+            local camera = workspace.CurrentCamera
+            camera.CameraType = Enum.CameraType.Custom -- Switch to Custom mode for player control
+            camera.CFrame = CFrame.new(character.HumanoidRootPart.Position + Vector3.new(0, 5, -10), character.HumanoidRootPart.Position) -- Position the camera behind the player
+        end)
+    else
+        warn("Animator not found in AnimationController.")
+    end
+else
+    warn("AnimationController not found.")
+end
+
+-- Make the camera follow the CameraPart inside the CamRig (during animation)
+local camera = workspace.CurrentCamera
+camera.CameraType = Enum.CameraType.Scriptable  -- Set the camera to Scriptable mode
+
+-- Update the camera's position to match CameraPart's position every frame
+game:GetService("RunService").RenderStepped:Connect(function()
+    if cameraPart then
+        -- Update the camera's CFrame to match the CameraPart's position and orientation
+        camera.CFrame = CFrame.new(cameraPart.Position, cameraPart.Position + cameraPart.CFrame.LookVector)
+    end
+end)
+
+
+end)
+
+local Players = game:GetService("Players")
+
+local function rotatePlayerToNorth(player)
+    local character = player.Character
+    if not character then return end
+
+    local humanoidRootPart = character:FindFirstChild("HumanoidRootPart")
+    if not humanoidRootPart then return end
+
+    -- Define the north direction (negative Z-axis in Roblox)
+    local northDirection = Vector3.new(0, 0, -1)
+
+    -- Calculate the desired CFrame facing north
+    local newCFrame = CFrame.lookAt(humanoidRootPart.Position, humanoidRootPart.Position + northDirection)
+
+    -- Set the HumanoidRootPart's CFrame to the new CFrame
+    humanoidRootPart.CFrame = newCFrame
+end
+
+-- Example usage: Rotate the local player to face north
+local player = Players.LocalPlayer
+if player then
+    rotatePlayerToNorth(player)
+end
+
+wait(0.00001)
+
+spawn(function()
+
+spawn(function()
+
+shared.sfx = function(v290) --[[ Line: 1580 ]] --[[ Name: sfx ]]
+    local l_Sound_0 = Instance.new("Sound");
+    l_Sound_0.SoundGroup = game:GetService("SoundService").Sounds;
+    game:GetService("CollectionService"):AddTag(l_Sound_0, "NewSound");
+    local v292 = nil;
+    local v293 = nil;
+    v293 = l_Sound_0.Ended:connect(function() --[[ Line: 1586 ]]
+        if l_Sound_0 then
+            l_Sound_0:Destroy();
+        end;
+        if v292 then
+            v292:Destroy();
+        end;
+        return v293:Disconnect();
+    end);
+    if not v290.RollOffMaxDistance then
+        v290.RollOffMaxDistance = 300;
+    end;
+    if v290.CFrame then
+        v292 = Instance.new("Attachment");
+        v292.Parent = workspace.Terrain;
+        v292.WorldCFrame = v290.CFrame;
+        v290.Parent = v292;
+    end;
+    v290.CFrame = nil;
+    for v294, v295 in pairs(v290) do
+        l_Sound_0[v294] = v295;
+    end;
+    return l_Sound_0, v292;
+end;
+
+local Sound = shared.sfx({
+     SoundId = "rbxassetid://116434570262349",
+     Volume = 2,
+     Parent = game.Workspace
+})
+Sound:Resume()
+
+
+local V_123 = game.Players.LocalPlayer
+local V_456 = V_123.Character or V_123.CharacterAdded:Wait()
+local V_789 = V_456:WaitForChild("HumanoidRootPart")
+task.spawn(function()
+--Freeze
+local freeze = Instance.new("Accessory", game.Players.LocalPlayer.Character)
+freeze.Name = "Freeze"
+
+--No Rotate
+local NoRotate = Instance.new("Accessory", game.Players.LocalPlayer.Character)
+NoRotate.Name = "NoRotate"
+end)
+
+
+
+local animationId = "100255267749203"
+ 
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoid = character:WaitForChild("Humanoid")
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local liveFolder = workspace:FindFirstChild("Live") -- Locate the Live folder
+
+-- Play the first animation and sound
+local animation = Instance.new("Animation")
+animation.AnimationId = "rbxassetid://" .. animationId
+local animationTrack = humanoid:LoadAnimation(animation)
+animationTrack:Play()
+animationTrack.TimePosition = 0.125
+animationTrack.Ended:Connect(function()
+--Freeze
+local Freeze = game.Players.LocalPlayer.Character.Freeze
+Freeze:Destroy()
+
+--No Rotate
+local NoRotate = game.Players.LocalPlayer.Character.NoRotate
+NoRotate:Destroy()
+end)
+
+end)
+
+spawn(function()
+
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local emotePath = ReplicatedStorage:WaitForChild("Emotes"):WaitForChild("PrisonRealmRig")
+local animationId = "rbxassetid://132931842051377" -- Replace with your animation's asset ID
+
+-- Configuration for model spawning and movement
+local rightOffset = 0 -- Move the model to the right (positive value moves it to the right, negative to the left)
+local forwardOffset = -0.15 -- Move the model forward relative to the player
+local heightOffset = 0.1 -- Adjust height (positive for upward, negative for downward)
+local initialTransparency = 0 -- Talismanmesh starts visible
+local finalTransparency = 1 -- Talismanmesh becomes invisible after delay
+local talismanDelay = 4.65 -- Delay before changing Talismanmesh transparency (in seconds)
+local restDelay = 4.65 -- Delay before changing the transparency of the rest of the model's parts
+
+-- Function to set transparency for the Talismanmesh part
+local function setTalismanTransparency(model, transparency)
+    local talisman = model:FindFirstChild("Talismanmesh")
+    if talisman and talisman:IsA("BasePart") then
+        talisman.Transparency = transparency
+    end
+end
+
+-- Function to set transparency for the other parts of the model
+local function setOtherPartsTransparency(model, transparency)
+    local partNames = {"OPEN", "CIRCLE_001", "Cube_2", "Cube_finals", "Sphere_001"}
+    for _, partName in pairs(partNames) do
+        local part = model:FindFirstChild(partName)
+        if part and part:IsA("BasePart") then
+            part.Transparency = transparency
+        end
+    end
+end
+
+-- Function to set CanCollide property to false for all parts in the model
+local function setModelCanCollide(model)
+    for _, descendant in pairs(model:GetDescendants()) do
+        if descendant:IsA("BasePart") then
+            descendant.CanCollide = false
+        end
+    end
+end
+
+-- Function to play animation on the model
+local function playAnimation(model, animId)
+    local animator = model:FindFirstChild("Animator", true)
+    if not animator then
+        warn("Animator not found in model")
+        return
+    end
+
+    local animation = Instance.new("Animation")
+    animation.AnimationId = animId
+    animator:LoadAnimation(animation):Play()
+end
+
+-- Function to weld the model to the HumanoidRootPart
+local function weldModelToHumanoidRootPart(model, humanoidRootPart)
+    local weld = Instance.new("WeldConstraint")
+    weld.Part0 = humanoidRootPart
+    weld.Part1 = model.PrimaryPart
+    weld.Parent = model.PrimaryPart
+end
+
+-- Function to spawn and configure the model for the player
+local function spawnModelForPlayer(player)
+    if not emotePath then return end
+
+    -- Clone and set up the model
+    local modelClone = emotePath:Clone()
+    modelClone.Parent = workspace
+    setModelCanCollide(modelClone)  -- Disable collision for the entire model
+    playAnimation(modelClone, animationId)
+
+    -- Set the initial transparency of all parts
+    setOtherPartsTransparency(modelClone, 1) -- Make the rest of the model fully invisible
+    setTalismanTransparency(modelClone, initialTransparency) -- Make the Talismanmesh visible initially
+
+    -- Get the player's character and position for spawning
+    local character = player.Character or player.CharacterAdded:Wait()
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    if not rootPart then return end
+
+    -- Calculate spawn position with configurable offsets
+    local spawnPosition = rootPart.Position 
+        + rootPart.CFrame.LookVector * forwardOffset  -- Move forward by forwardOffset
+        + Vector3.new(0, heightOffset, 0)             -- Apply height offset
+
+    -- Ensure the model faces the same direction as the player's HumanoidRootPart
+    local rotationCFrame = rootPart.CFrame - rootPart.Position  -- Get the orientation from the HumanoidRootPart
+
+    -- Apply the spawn position and rotation to the model's PrimaryPart
+    modelClone:SetPrimaryPartCFrame(CFrame.new(spawnPosition) * rotationCFrame)
+    modelClone.PrimaryPart.Anchored = false
+
+    -- Weld the model to the HumanoidRootPart
+    weldModelToHumanoidRootPart(modelClone, rootPart)
+
+    -- Change transparency for the rest of the model's parts after a delay
+    task.delay(restDelay, function()
+        setOtherPartsTransparency(modelClone, 0) -- Make the rest of the model fully visible
+    end)
+
+    -- Change transparency for the Talismanmesh after a different delay
+    task.delay(talismanDelay, function()
+        setTalismanTransparency(modelClone, finalTransparency) -- Make the Talismanmesh invisible
+    end)
+
+    -- Optionally, remove the model after a set time
+    task.delay(6.6, function()
+        if modelClone.Parent then
+            modelClone:Destroy()
+        end
+    end)
+end
+
+-- Trigger the function when the LocalPlayer is available
+local player = Players.LocalPlayer
+if player then
+    spawnModelForPlayer(player)
+end
+end)
+spawn(function()
+task.spawn(function()
+    wait(9.5)
+    local StarterGui = game:GetService("StarterGui")
+
+    local function sendClientSidedMessage(playerName, message, messageColor)
+        StarterGui:SetCore("ChatMakeSystemMessage", {
+            Text = "[" .. playerName .. "] " .. message,
+            Color = messageColor or Color3.new(1, 1, 1),
+            Font = Enum.Font.SourceSansBold,
+            TextSize = 14
+        })
+    end
+
+    sendClientSidedMessage("S", "Weakest Dummy has been sealed.", Color3.new(255, 0, 0))
+end)
+end)
+
+wait(6.8)
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+
+local animationIds = {
+    "rbxassetid://115400109213203",
+    "rbxassetid://129152881643120",
+    "rbxassetid://116148929833466",
+    "rbxassetid://106613129685108",
+    "rbxassetid://85535076926939",
+    "rbxassetid://136688312702757"
+}
+
+local spawnDistance = 45
+local spawnHeightOffset = -2.5
+local spawnSideOffset = -1
+local modelLifetime = 2.5
+
+local function setModelAnchored(model)
+    for _, descendant in pairs(model:GetDescendants()) do
+        if descendant:IsA("BasePart") then
+            descendant.Anchored = true
+        end
+    end
+end
+
+local function playAnimation(model, animId)
+    local animator = model:FindFirstChild("Animator", true)
+    if not animator then return end
+
+    local animation = Instance.new("Animation")
+    animation.AnimationId = animId
+    local anim = animator:LoadAnimation(animation)
+    anim:Play()
+    anim.TimePosition = 6.7
+end
+
+local function replicateCFrame(model, targetCFrame)
+    for _, descendant in pairs(model:GetDescendants()) do
+        if descendant:IsA("BasePart") and model.PrimaryPart then
+            descendant.CFrame = targetCFrame * model.PrimaryPart.CFrame:ToObjectSpace(descendant.CFrame)
+        end
+    end
+end
+
+local function spawnModelForPlayer(player, stringName, animationId, spawnDistance, spawnHeightOffset, spawnSideOffset)
+    local emotesFolder = ReplicatedStorage:FindFirstChild("Emotes")
+    if not emotesFolder then return end
+
+    local stringsFolder = emotesFolder:FindFirstChild("Strings")
+    if not stringsFolder then return end
+
+    local emotePath = stringsFolder:FindFirstChild(stringName)
+    if not emotePath then return end
+
+    local modelClone = emotePath:Clone()
+    if not modelClone.PrimaryPart then return end
+
+    modelClone.Parent = workspace
+    setModelAnchored(modelClone)
+    playAnimation(modelClone, animationId)
+
+    local rootPart = player.Character and player.Character:FindFirstChild("HumanoidRootPart")
+    if not rootPart then return end
+
+    -- Calculate the position for the spawn, ensuring it's as far as possible but still touching the dummy
+    local modelSize = modelClone:GetExtentsSize()
+    local spawnCFrame = rootPart.CFrame + rootPart.CFrame.LookVector * (spawnDistance + modelSize.X) + Vector3.new(spawnSideOffset, spawnHeightOffset, 0)
+
+    modelClone:SetPrimaryPartCFrame(spawnCFrame)
+    replicateCFrame(modelClone, spawnCFrame)
+
+    delay(modelLifetime, function()
+        if modelClone.Parent then
+            modelClone:Destroy()
+        end
+    end)
+end
+
+local player = Players.LocalPlayer
+if player then
+    for i = 1, 6 do
+        local stringName = "String" .. i
+        local animId = animationIds[i]
+
+        spawnModelForPlayer(player, stringName, animId, spawnDistance, spawnHeightOffset, spawnSideOffset)
+    end
+end
+
+
+local player = game.Workspace["Weakest Dummy"]
+if player then
+    for i = 1, 6 do
+        local stringName = "String" .. i
+        local animId = animationIds[i]
+
+        spawnModelForPlayer(player, stringName, animId, spawnDistance, spawnHeightOffset, spawnSideOffset)
+    end
+end
+
+
+end)
+
+wait(7.9)
+local Players = game:GetService("Players")
+local ReplicatedStorage = game:GetService("ReplicatedStorage")
+local TweenService = game:GetService("TweenService")
+
+-- Configuration
+local SpawnDistance = -0 -- Distance from the player (forward)
+local SpawnHeightOffset = -0.125 -- Height offset (up/down)
+local SpawnSideOffset = -0.05 -- Side offset for the model (rightward)
+local SpawnDownOffset = -3 -- Offset to move the model downward (negative values)
+local SpawnRotation = Vector3.new(0, 0, 0) -- Rotation in degrees (X, Y, Z)
+local ModelScale = 0.375 -- Scale of the model
+local AnimationStartTime = 2 -- Time position to start the animation
+local animationId = "rbxassetid://73313263538976" -- Replace with your animation's asset ID
+local SpawnSide = -5 -- 1 for right, -1 for left (use -1 for left side)
+
+local emotePath = ReplicatedStorage:WaitForChild("Emotes"):WaitForChild("RealmPrism")
+
+local function setModelCanCollide(model)
+    for _, descendant in pairs(model:GetDescendants()) do
+        if descendant:IsA("BasePart") then
+            descendant.CanCollide = false
+        end
+    end
+end
+
+local function playAnimation(model, animId, startTime)
+    local animator = model:FindFirstChild("Animator", true)
+    if not animator then
+        warn("Animator not found in model")
+        return
+    end
+
+    local animation = Instance.new("Animation")
+    animation.AnimationId = animId
+    local animationTrack = animator:LoadAnimation(animation)
+    animationTrack:Play()
+    animationTrack.TimePosition = 7.9
+end
+
+local function spawnModelForPlayer(player)
+    if not emotePath then return end
+
+    local modelClone = emotePath:Clone()
+    modelClone.Parent = workspace
+    setModelCanCollide(modelClone)
+
+    -- Anchor the model to make it immovable
+    if modelClone.PrimaryPart then
+        modelClone.PrimaryPart.Anchored = true
+    else
+        warn("Model does not have a PrimaryPart set. Cannot anchor.")
+        return
+    end
+
+    -- Play animation at specified time position
+    playAnimation(modelClone, animationId, AnimationStartTime)
+
+    local character = player.Character or player.CharacterAdded:Wait()
+    local rootPart = character:FindFirstChild("HumanoidRootPart")
+    if not rootPart then return end
+
+    -- Get the player's look direction (forward)
+    local lookDirection = rootPart.CFrame.LookVector
+
+    -- Get the player's right direction (rightward)
+    local rightDirection = rootPart.CFrame.RightVector
+
+    -- Calculate spawn position using offsets
+    local spawnPosition = rootPart.Position 
+        + lookDirection * SpawnDistance  -- Move forward by SpawnDistance
+        + rightDirection * SpawnSideOffset * SpawnSide  -- Move to the right or left by SpawnSideOffset
+        + Vector3.new(0, SpawnHeightOffset, 0)  -- Apply height offset
+        + Vector3.new(0, SpawnDownOffset, 0) -- Apply downward offset
+
+    -- Apply rotation to the spawn position
+    local rotationCFrame = CFrame.Angles(
+        math.rad(SpawnRotation.X), -- X-axis rotation
+        math.rad(SpawnRotation.Y), -- Y-axis rotation
+        math.rad(SpawnRotation.Z)  -- Z-axis rotation
+    )
+    local spawnCFrame = CFrame.new(spawnPosition, spawnPosition + lookDirection) * rotationCFrame
+
+    modelClone:SetPrimaryPartCFrame(spawnCFrame)
+
+    -- Define the tweening properties
+    local tweenInfo = TweenInfo.new(
+        1.5, -- Time in seconds to reach the target size
+        Enum.EasingStyle.Linear, -- Easing style
+        Enum.EasingDirection.Out, -- Easing direction
+        0, -- Number of times to repeat (0 means no repeat)
+        false, -- Reverses the tween after completion
+        0 -- Delay before starting the tween
+    )
+
+    -- Create a tween for each BasePart in the model
+    for _, part in pairs(modelClone:GetDescendants()) do
+        if part:IsA("BasePart") then
+            local goal = {Size = part.Size * ModelScale}
+            local tween = TweenService:Create(part, tweenInfo, goal)
+            
+            -- Start the tween after a delay
+            task.delay(0.6375, function()
+                tween:Play()
+            end)
+        end
+    end
+
+    -- Remove the model after 14 seconds
+    task.delay(5.625, function()
+        if modelClone.Parent then
+            modelClone:Destroy()
+        end
+    end)
+end
+
+local player = Players.LocalPlayer
+if player then
+    spawnModelForPlayer(player)
+end
+
+
+wait(3)
+
+workspace.CurrentCamera:remove()
+wait()
+workspace.CurrentCamera.CameraSubject = game.Players.LocalPlayer.Character:FindFirstChildWhichIsA('Humanoid')
+workspace.CurrentCamera.CameraType = "Track"
+game.Players.LocalPlayer.CameraMinZoomDistance = 0.5
+game.Players.LocalPlayer.CameraMaxZoomDistance = 400
+game.Players.LocalPlayer.CameraMode = "Classic"
+game.Players.LocalPlayer.Character.Head.Anchored = false
+
+
+
+
+local Text = "Prison Realm: Close"
+
+-- don't change anything here unless you know
+local v22808 = require(game.ReplicatedStorage.Resources.UFW.TekrinnDialogue)
+local v22811 = {
+    {
+        Text = Text,
+        Color = ColorSequence.new({
+                ColorSequenceKeypoint.new(0, Color3.fromRGB(0, 0, 0)),
+                ColorSequenceKeypoint.new(0.5, Color3.fromRGB(255, 17, 17)),
+                ColorSequenceKeypoint.new(1, Color3.fromRGB(255, 255, 255))
+            }),
+        TextStrokeColor = Color3.new(0, 0, 0),
+        Bold = false,
+        Italic = false,
+        Shake = {
+            Enabled = false,
+            Intensity = 1,
+            Lifetime = 2
+        },
+        TypeSpeed = 0.06
+    }
+}
+v22808.Speak(game.Players.LocalPlayer.Character, v22811)
